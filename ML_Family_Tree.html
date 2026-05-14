@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Machine Learning Family Tree</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #eef2f7;
+  --paper:     #ffffff;
+
+  --ai:        #5b8dee;
+  --ai-light:  #dce9fd;
+  --ml:        #38b2a0;
+  --ml-light:  #d4f0ec;
+  --sup:       #5fa76e;
+  --sup-light: #dcf0e2;
+  --uns:       #d4903a;
+  --uns-light: #fcefd8;
+  --rl:        #d4706a;
+  --rl-light:  #fde5e3;
+  --dl:        #8a6bbf;
+  --dl-light:  #ede5f8;
+  --nn:        #4da8c8;
+  --nn-light:  #ddf0f8;
+  --cnn:       #c4507a;
+  --cnn-light: #fce4ef;
+  --rnn:       #4aaa7a;
+  --rnn-light: #ddf5e8;
+  --tf:        #c4783a;
+  --tf-light:  #fce9d8;
+  --gen:       #9046b0;
+  --gen-light: #f0e4f8;
+
+  --text:      #1a2a3a;
+  --textmid:   #3d5066;
+  --textsoft:  #7a8fa3;
+  --line:      #c8d8e8;
+  --linesub:   #dde8f2;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Nunito', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 48px 20px 80px;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse at 18% 8%,  rgba(91,141,238,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 92%, rgba(138,107,191,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 55% 45%, rgba(56,178,160,0.05) 0%, transparent 45%);
+}
+
+.page { position: relative; z-index: 1; max-width: 1380px; margin: 0 auto; }
+
+/* ── HEADER ── */
+.hd { text-align: center; margin-bottom: 40px; }
+
+.hd-badge {
+  display: inline-block;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ai); background: var(--ai-light);
+  padding: 4px 16px; border-radius: 100px; margin-bottom: 16px;
+}
+
+.hd h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 900; letter-spacing: -0.02em; line-height: 1.1;
+  color: var(--text); margin-bottom: 12px;
+}
+.hd h1 em { font-style: normal; color: var(--ai); }
+
+.hd p { font-size: 14.5px; color: var(--textsoft); max-width: 480px; margin: 0 auto; line-height: 1.75; }
+
+/* ── LEGEND ── */
+.legend {
+  display: flex; flex-wrap: wrap; gap: 7px;
+  justify-content: center; margin-bottom: 40px;
+}
+.lp {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: var(--textmid);
+  background: var(--paper); border: 1.5px solid var(--linesub);
+  padding: 4px 12px; border-radius: 100px;
+  box-shadow: 0 1px 4px rgba(30,42,58,0.07);
+}
+.ld { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── TREE CARD ── */
+.tree-card {
+  background: var(--paper);
+  border-radius: 22px;
+  box-shadow: 0 6px 48px rgba(91,141,238,0.11), 0 1px 4px rgba(30,42,58,0.06);
+  padding: 52px 28px 60px;
+  overflow-x: auto;
+}
+.tree-inner { min-width: 1080px; }
+
+/* ── LAYOUT HELPERS ── */
+.col   { display: flex; flex-direction: column; align-items: center; }
+.row   { display: flex; align-items: flex-start; justify-content: center; }
+.lv    { width: 2px; background: var(--line); flex-shrink: 0; }
+.lh    { height: 2px; background: var(--line); }
+.dot   { width: 7px; height: 7px; border-radius: 50%; background: var(--line); flex-shrink: 0; }
+
+/* ── NODES ── */
+.n-root {
+  padding: 16px 40px; border-radius: 18px;
+  background: var(--ai-light); border: 2px solid rgba(91,141,238,0.5);
+  box-shadow: 0 4px 28px rgba(91,141,238,0.2);
+  text-align: center;
+}
+.n-root .nm {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 900; color: #2450aa;
+}
+.n-root .nd { font-size: 10.5px; color: #5b8dee; margin-top: 3px; }
+
+.n-l1 {
+  padding: 12px 30px; border-radius: 16px;
+  border: 1.5px solid; text-align: center;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.08);
+}
+.n-l1 .nm {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700;
+}
+.n-l1 .nd { font-size: 10px; margin-top: 2px; opacity: 0.75; }
+
+.n-sec {
+  padding: 9px 14px; border-radius: 12px;
+  border: 1.5px solid; text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  width: 100%; max-width: 165px;
+}
+.n-sec .nm { font-size: 11.5px; font-weight: 700; line-height: 1.3; }
+.n-sec .nd { font-size: 9.5px; margin-top: 2px; opacity: 0.7; line-height: 1.35; }
+
+.n-sub {
+  padding: 7px 12px; border-radius: 10px;
+  border: 1.5px solid; font-size: 11px; font-weight: 700;
+  text-align: center; white-space: nowrap;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+}
+
+.n-leaf {
+  padding: 6px 10px; border-radius: 8px;
+  border: 1px solid; font-size: 10px; font-weight: 600;
+  text-align: center; line-height: 1.35;
+  width: 100%;
+}
+
+/* color themes */
+.c-ml  { background: var(--ml-light);  border-color: rgba(56,178,160,0.45);  color: #1a6b60; }
+.c-sup { background: var(--sup-light); border-color: rgba(95,167,110,0.45);  color: #2d5e38; }
+.c-uns { background: var(--uns-light); border-color: rgba(212,144,58,0.45);  color: #7a4e10; }
+.c-rl  { background: var(--rl-light);  border-color: rgba(212,112,106,0.45); color: #8a3430; }
+.c-dl  { background: var(--dl-light);  border-color: rgba(138,107,191,0.45); color: #4a2880; }
+.c-nn  { background: var(--nn-light);  border-color: rgba(77,168,200,0.45);  color: #1a5e78; }
+.c-cnn { background: var(--cnn-light); border-color: rgba(196,80,122,0.45);  color: #7a1e48; }
+.c-rnn { background: var(--rnn-light); border-color: rgba(74,170,122,0.45);  color: #1a5a3a; }
+.c-tf  { background: var(--tf-light);  border-color: rgba(196,120,58,0.45);  color: #7a3c10; }
+.c-gen { background: var(--gen-light); border-color: rgba(144,70,176,0.45);  color: #541870; }
+
+/* leaf stacks */
+.leaf-stack { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center; margin-top: 40px;
+  font-size: 12px; color: var(--textsoft);
+}
+.footer strong { color: var(--ai); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hd">
+  <div class="hd-badge">Complete Visual Reference</div>
+  <h1>Machine Learning <em>Family Tree</em></h1>
+  <p>Every major branch of AI & ML — from classical statistics to modern generative architectures — in one clean diagram.</p>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="lp"><div class="ld" style="background:var(--ai)"></div>Artificial Intelligence</div>
+  <div class="lp"><div class="ld" style="background:var(--ml)"></div>Machine Learning</div>
+  <div class="lp"><div class="ld" style="background:var(--sup)"></div>Supervised Learning</div>
+  <div class="lp"><div class="ld" style="background:var(--uns)"></div>Unsupervised Learning</div>
+  <div class="lp"><div class="ld" style="background:var(--rl)"></div>Reinforcement Learning</div>
+  <div class="lp"><div class="ld" style="background:var(--dl)"></div>Deep Learning</div>
+  <div class="lp"><div class="ld" style="background:var(--nn)"></div>Neural Networks</div>
+  <div class="lp"><div class="ld" style="background:var(--cnn)"></div>CNN</div>
+  <div class="lp"><div class="ld" style="background:var(--rnn)"></div>RNN</div>
+  <div class="lp"><div class="ld" style="background:var(--tf)"></div>Transformers</div>
+  <div class="lp"><div class="ld" style="background:var(--gen)"></div>Generative Models</div>
+</div>
+
+<!-- TREE CARD -->
+<div class="tree-card">
+<div class="tree-inner">
+<div class="col">
+
+  <!-- ROOT -->
+  <div class="n-root">
+    <div class="nm">Artificial Intelligence</div>
+    <div class="nd">The science of creating intelligent machines</div>
+  </div>
+  <div class="lv" style="height:28px;"></div>
+
+  <!-- Fork H bar -->
+  <div class="row" style="width:88%;">
+    <div class="lh" style="flex:1;"></div>
+    <div class="dot"></div>
+    <div class="lh" style="flex:1;"></div>
+  </div>
+
+  <!-- TWO MAIN BRANCHES -->
+  <div class="row" style="width:100%;align-items:flex-start;">
+
+    <!-- ══════════════ MACHINE LEARNING ══════════════ -->
+    <div class="col" style="flex:1;padding:0 10px;">
+      <div class="lv" style="height:24px;"></div>
+
+      <div class="n-l1 c-ml" style="min-width:200px;">
+        <div class="nm" style="color:#1a6b60;">Machine Learning</div>
+        <div class="nd" style="color:#38b2a0;">Algorithms that learn from data</div>
+      </div>
+      <div class="lv" style="height:24px;"></div>
+
+      <!-- Fork to 3 sub-branches -->
+      <div class="row" style="width:100%;">
+        <div class="lh" style="flex:1;"></div>
+        <div class="dot"></div>
+        <div class="lh" style="flex:1;"></div>
+      </div>
+
+      <div class="row" style="width:100%;align-items:flex-start;">
+
+        <!-- SUPERVISED -->
+        <div class="col" style="flex:1.3;padding:0 7px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-sup">
+            <div class="nm">Supervised Learning</div>
+            <div class="nd">Learns from labeled examples</div>
+          </div>
+          <div class="lv" style="height:14px;"></div>
+
+          <!-- Reg + Class fork -->
+          <div class="row" style="width:100%;">
+            <div class="lh" style="flex:1;"></div>
+            <div class="dot" style="width:5px;height:5px;"></div>
+            <div class="lh" style="flex:1;"></div>
+          </div>
+          <div class="row" style="width:100%;align-items:flex-start;">
+
+            <!-- Regression -->
+            <div class="col" style="flex:1;padding:0 4px;">
+              <div class="lv" style="height:14px;"></div>
+              <div class="n-sub c-sup">Regression</div>
+              <div class="lv" style="height:10px;"></div>
+              <div class="leaf-stack">
+                <div class="n-leaf c-sup">Simple Linear Regression</div>
+                <div class="n-leaf c-sup">Multiple Linear Regression</div>
+                <div class="n-leaf c-sup">Polynomial Regression</div>
+                <div class="n-leaf c-sup">Ridge Regression</div>
+                <div class="n-leaf c-sup">Lasso Regression</div>
+                <div class="n-leaf c-sup">Elastic Net Regression</div>
+                <div class="n-leaf c-sup">Logistic Regression</div>
+              </div>
+            </div>
+
+            <!-- Classification -->
+            <div class="col" style="flex:1;padding:0 4px;">
+              <div class="lv" style="height:14px;"></div>
+              <div class="n-sub c-sup">Classification</div>
+              <div class="lv" style="height:10px;"></div>
+              <div class="leaf-stack">
+                <div class="n-leaf c-sup">Decision Trees</div>
+                <div class="n-leaf c-sup">Random Forest</div>
+                <div class="n-leaf c-sup">Support Vector Machine</div>
+                <div class="n-leaf c-sup">Naive Bayes</div>
+                <div class="n-leaf c-sup">K-Nearest Neighbors</div>
+                <div class="n-leaf c-sup">Logistic Classification</div>
+                <div class="n-leaf c-sup">Gradient Boosting</div>
+                <div class="n-leaf c-sup">XGBoost</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- UNSUPERVISED -->
+        <div class="col" style="flex:1.5;padding:0 7px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-uns">
+            <div class="nm">Unsupervised Learning</div>
+            <div class="nd">Finds hidden patterns in data</div>
+          </div>
+          <div class="lv" style="height:14px;"></div>
+
+          <div class="row" style="width:100%;">
+            <div class="lh" style="flex:1;"></div>
+            <div class="dot" style="width:5px;height:5px;"></div>
+            <div class="lh" style="flex:1;"></div>
+          </div>
+          <div class="row" style="width:100%;align-items:flex-start;">
+
+            <!-- Clustering -->
+            <div class="col" style="flex:1;padding:0 3px;">
+              <div class="lv" style="height:14px;"></div>
+              <div class="n-sub c-uns">Clustering</div>
+              <div class="lv" style="height:10px;"></div>
+              <div class="leaf-stack">
+                <div class="n-leaf c-uns">K-Means</div>
+                <div class="n-leaf c-uns">DBSCAN</div>
+                <div class="n-leaf c-uns">Hierarchical Clustering</div>
+                <div class="n-leaf c-uns">Mean Shift</div>
+                <div class="n-leaf c-uns">Gaussian Mixture Models</div>
+              </div>
+            </div>
+
+            <!-- Dim Reduction -->
+            <div class="col" style="flex:1;padding:0 3px;">
+              <div class="lv" style="height:14px;"></div>
+              <div class="n-sub c-uns" style="font-size:10px;white-space:normal;text-align:center;max-width:118px;">Dimensionality Reduction</div>
+              <div class="lv" style="height:10px;"></div>
+              <div class="leaf-stack">
+                <div class="n-leaf c-uns">PCA</div>
+                <div class="n-leaf c-uns">t-SNE</div>
+                <div class="n-leaf c-uns">LDA</div>
+                <div class="n-leaf c-uns">Autoencoders</div>
+              </div>
+            </div>
+
+            <!-- Association -->
+            <div class="col" style="flex:1;padding:0 3px;">
+              <div class="lv" style="height:14px;"></div>
+              <div class="n-sub c-uns" style="font-size:9.5px;white-space:normal;text-align:center;max-width:110px;padding:7px 8px;">Association Rule Learning</div>
+              <div class="lv" style="height:10px;"></div>
+              <div class="leaf-stack">
+                <div class="n-leaf c-uns">Apriori</div>
+                <div class="n-leaf c-uns">Eclat</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- REINFORCEMENT -->
+        <div class="col" style="flex:0.85;padding:0 7px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-rl">
+            <div class="nm">Reinforcement Learning</div>
+            <div class="nd">Learns via reward signals</div>
+          </div>
+          <div class="lv" style="height:14px;"></div>
+          <div class="leaf-stack" style="max-width:155px;">
+            <div class="n-leaf c-rl">Q-Learning</div>
+            <div class="n-leaf c-rl">Deep Q-Networks (DQN)</div>
+            <div class="n-leaf c-rl">SARSA</div>
+            <div class="n-leaf c-rl">Policy Gradient Methods</div>
+            <div class="n-leaf c-rl">Actor-Critic Methods</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Vertical divider between ML and DL -->
+    <div style="width:1.5px;background:linear-gradient(to bottom,transparent,var(--line) 15%,var(--line) 85%,transparent);align-self:stretch;margin:0 4px;flex-shrink:0;opacity:0.6;"></div>
+
+    <!-- ══════════════ DEEP LEARNING ══════════════ -->
+    <div class="col" style="flex:1;padding:0 10px;">
+      <div class="lv" style="height:24px;"></div>
+
+      <div class="n-l1 c-dl" style="min-width:200px;">
+        <div class="nm" style="color:#4a2880;">Deep Learning</div>
+        <div class="nd" style="color:#8a6bbf;">Multi-layer neural architectures</div>
+      </div>
+      <div class="lv" style="height:24px;"></div>
+
+      <!-- Fork to 5 sub-branches -->
+      <div class="row" style="width:100%;">
+        <div class="lh" style="flex:1;"></div>
+        <div class="dot"></div>
+        <div class="lh" style="flex:1;"></div>
+      </div>
+
+      <div class="row" style="width:100%;align-items:flex-start;">
+
+        <!-- Neural Networks -->
+        <div class="col" style="flex:1;padding:0 4px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-nn" style="max-width:130px;">
+            <div class="nm">Neural Networks</div>
+            <div class="nd">Brain-inspired layers</div>
+          </div>
+          <div class="lv" style="height:12px;"></div>
+          <div class="leaf-stack" style="max-width:130px;">
+            <div class="n-leaf c-nn">Perceptron</div>
+            <div class="n-leaf c-nn">Feed Forward NN</div>
+            <div class="n-leaf c-nn">Backpropagation</div>
+          </div>
+        </div>
+
+        <!-- CNN -->
+        <div class="col" style="flex:1;padding:0 4px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-cnn" style="max-width:130px;">
+            <div class="nm">CNN</div>
+            <div class="nd">Image & spatial data</div>
+          </div>
+          <div class="lv" style="height:12px;"></div>
+          <div class="leaf-stack" style="max-width:130px;">
+            <div class="n-leaf c-cnn">ResNet</div>
+            <div class="n-leaf c-cnn">AlexNet</div>
+            <div class="n-leaf c-cnn">VGG</div>
+            <div class="n-leaf c-cnn">EfficientNet</div>
+          </div>
+        </div>
+
+        <!-- RNN -->
+        <div class="col" style="flex:1;padding:0 4px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-rnn" style="max-width:130px;">
+            <div class="nm">RNN</div>
+            <div class="nd">Sequential data</div>
+          </div>
+          <div class="lv" style="height:12px;"></div>
+          <div class="leaf-stack" style="max-width:130px;">
+            <div class="n-leaf c-rnn">LSTM</div>
+            <div class="n-leaf c-rnn">GRU</div>
+            <div class="n-leaf c-rnn">Bidirectional RNN</div>
+          </div>
+        </div>
+
+        <!-- Transformers -->
+        <div class="col" style="flex:1;padding:0 4px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-tf" style="max-width:130px;">
+            <div class="nm">Transformers</div>
+            <div class="nd">Self-attention models</div>
+          </div>
+          <div class="lv" style="height:12px;"></div>
+          <div class="leaf-stack" style="max-width:130px;">
+            <div class="n-leaf c-tf">BERT</div>
+            <div class="n-leaf c-tf">GPT</div>
+            <div class="n-leaf c-tf">T5</div>
+            <div class="n-leaf c-tf">Vision Transformer (ViT)</div>
+          </div>
+        </div>
+
+        <!-- Generative -->
+        <div class="col" style="flex:1;padding:0 4px;">
+          <div class="lv" style="height:18px;"></div>
+          <div class="n-sec c-gen" style="max-width:130px;">
+            <div class="nm">Generative Models</div>
+            <div class="nd">Synthesize new data</div>
+          </div>
+          <div class="lv" style="height:12px;"></div>
+          <div class="leaf-stack" style="max-width:130px;">
+            <div class="n-leaf c-gen">GANs</div>
+            <div class="n-leaf c-gen">Variational Autoencoders</div>
+            <div class="n-leaf c-gen">Diffusion Models</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /two branches -->
+
+</div><!-- /col root -->
+</div><!-- /tree-inner -->
+</div><!-- /tree-card -->
+
+<div class="footer">
+  <strong>Machine Learning Family Tree</strong> &nbsp;·&nbsp; A complete reference of AI, ML &amp; Deep Learning concepts and architectures
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
